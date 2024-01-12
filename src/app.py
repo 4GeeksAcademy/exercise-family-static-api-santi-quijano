@@ -30,21 +30,24 @@ def handle_hello():
     members = jackson_family.get_all_members()
     return jsonify(members), 200
 
-@app.route('/member', methods=['POST']) def add_new_member(): response = request.get_json() new_member = response return jsonify(jackson_family.add_member(new_member)), 200
+@app.route('/member', methods=['POST'])
+def add_new_member():
+    response = request.get_json()
+    new_member = response
+    return jsonify(jackson_family.add_member(new_member)), 200
 
-@app.route('/member/<int:member_id>', methods=['GET'])
-def get_a_member(member_id):
-    sole_member = jackson_family.get_member(member_id)
-    if sole_member is not None:
-        return jsonify(sole_member), 200
+@app.route('/member/<int:id>', methods=['GET'])
+def get_member(id):
+    sole_member = jackson_family.get_member(id)
+    if None in sole_member:
+        return jsonify(sole_member), 404
+    return jsonify(sole_member), 200
     
-    return jsonify({'msg': 'User has not been found'}), 404
 
-    
-@app.route('/member/<int:member_id>', methods=['DELETE'])
-def delete_member(member_id):
-    result = jackson_family.delete_member(member_id)
-    if result["done"]:
+@app.route('/member/<int:id>', methods=['DELETE'])
+def delete_member(id):
+    result = jackson_family.delete_member(id)
+    if result.get("done"):
         return jsonify(result), 200
     return jsonify(result), 404
 
